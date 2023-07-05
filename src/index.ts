@@ -6,11 +6,10 @@ import {
   provide as originalProvide,
   inject as originalInject
 } from 'vue'
-import type { Opaque } from 'type-fest'
 
 const store = new WeakMap()
 
-type AtomTrait = Opaque<symbol, 'atom'>
+interface AtomTrait { __type: 'atom' }
 type Atom<T = any> = AtomTrait & InjectionKey<Ref<UnwrapRef<T>>>
 type AtomType<T> = T extends Atom<infer V> ? V : never
 
