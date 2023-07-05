@@ -1,0 +1,35 @@
+{
+  "name": "vue-atoms",
+  "version": "0.0.1",
+  "description": "Better type-safe provide() and inject() for Vue",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint --ext .ts,.js .",
+    "test": "vitest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.61.0",
+    "@typescript-eslint/parser": "^5.61.0",
+    "@vue/test-utils": "^2.4.0",
+    "eslint": "^8.44.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-config-standard-with-typescript": "^36.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^15.7.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "jsdom": "^22.1.0",
+    "type-fest": "^3.12.0",
+    "typescript": "^5.2.0-beta",
+    "vitest": "^0.32.4",
+    "vue": "^3.3.4"
+  },
+  "peerDependencies": {
+    "vue": ">=3.2"
+  },
+  "dependencies": {
+    "@vueuse/core": "^10.2.1"
+  }
+}
