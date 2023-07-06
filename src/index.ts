@@ -40,7 +40,7 @@ export function inject<U = unknown, T extends Atom | InjectionKey<any> | string 
 
 export function provide<T, K extends Atom | InjectionKey<any> | string = string>(
   key: K,
-  value: K extends Atom ? AtomType<K> : T
+  value: K extends Atom ? AtomType<K> | Ref<AtomType<K>> : T
 ): void {
   if (isAtom(key)) {
     /** Create a new atom with the same type */

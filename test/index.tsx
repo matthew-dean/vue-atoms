@@ -1,4 +1,4 @@
-import { defineComponent, h } from 'vue'
+import { defineComponent, h, computed } from 'vue'
 import { atom, inject, provide } from '../src'
 import { mount } from '@vue/test-utils'
 
@@ -24,7 +24,9 @@ describe('test', () => {
     )
     const Parent = defineComponent(
       () => {
-        provide(myAtom, 1)
+        const atm = inject(myAtom)
+        const newAtom = computed(() => atm.value + 1)
+        provide(myAtom, newAtom)
         return () => <Child />
       }
     )

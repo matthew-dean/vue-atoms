@@ -1,6 +1,6 @@
 {
   "name": "vue-atoms",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Better type-safe provide() and inject() for Vue",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -10,8 +10,12 @@
     "build": "tsc --project tsconfig.build.json",
     "prepublishOnly": "npm run build"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["vue", "jotai"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "author": "Matthew Dean",
   "license": "MIT",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.61.0",
@@ -30,8 +34,5 @@
   },
   "peerDependencies": {
     "vue": ">=3.2"
-  },
-  "dependencies": {
-    "@vueuse/core": "^10.2.1"
   }
 }
