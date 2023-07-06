@@ -10,7 +10,7 @@ import {
 const store = new WeakMap()
 
 interface AtomTrait { __type: 'atom' }
-type Atom<T = any> = AtomTrait & InjectionKey<Ref<UnwrapRef<T>>>
+type Atom<T = any> = symbol & AtomTrait & InjectionKey<Ref<UnwrapRef<T>>>
 type AtomType<T> = T extends Atom<infer V> ? V : never
 
 export const atom = <T>(initialValue: T) => {
