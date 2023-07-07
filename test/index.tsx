@@ -33,4 +33,21 @@ describe('test', () => {
     const wrapper = mount(Parent)
     expect(wrapper.html()).toBe('<div>0<div>1</div>\n</div>')
   })
+
+  test('can be provided in mount options', () => {
+    const component = defineComponent(
+      () => {
+        const atm = inject(myAtom)
+        return () => <div>{ atm.value }</div>
+      }
+    )
+    const wrapper = mount(component, {
+      global: {
+        provide: {
+          [myAtom]: 1
+        }
+      }
+    })
+    expect(wrapper.html()).toBe('<div>1</div>')
+  })
 })
