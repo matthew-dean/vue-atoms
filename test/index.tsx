@@ -25,12 +25,12 @@ describe('test', () => {
     const Parent = defineComponent(
       () => {
         const atm = inject(myAtom)
-        const newAtom = computed(() => atm.value + 1)
-        provide(myAtom, newAtom)
-        return () => <Child />
+        const newValue = computed(() => atm.value + 1)
+        provide(myAtom, newValue)
+        return () => <div>{ atm.value }<Child /></div>
       }
     )
     const wrapper = mount(Parent)
-    expect(wrapper.html()).toBe('<div>1</div>')
+    expect(wrapper.html()).toBe('<div>0<div>1</div>\n</div>')
   })
 })

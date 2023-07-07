@@ -1,6 +1,6 @@
 # vue-atoms
 
-_Note: This is pre-1.0 so feedback welcome. Right now, this is designed as a drop-in, type-safe replacement to `provide()` and `inject()`. Should the functions have different names?_
+_Note: This is pre-1.0 so feedback welcome, and API is not yet stable. Right now, this is designed as a drop-in, type-safe replacement to `provide()` and `inject()`._
 
 ## Installation
 ```sh
