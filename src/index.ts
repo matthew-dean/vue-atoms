@@ -4,7 +4,8 @@ import {
   type InjectionKey,
   ref,
   provide as originalProvide,
-  inject as originalInject
+  inject as originalInject,
+  hasInjectionContext
 } from 'vue'
 
 /**
@@ -53,27 +54,42 @@ type Atom<T = any> = symbol & AtomTrait & InjectionKey<Ref<UnwrapRef<T>>>
 type AtomType<T> = T extends Atom<infer V> ? V : never
 
 export const atom = <T>(initialValue: T) => {
-  const sym = Symbol() // eslint-disable-line symbol-description
+  const sym = Symbol('atom')
   store.set(sym, ref(initialValue))
   return sym as Atom<T>
 }
 
 const isAtom = <T>(key: Atom<T> | InjectionKey<T> | string): key is Atom<T> => {
-  return typeof key !== 'string'
+  return typeof key !== 'string' && store.has(key as symbol)
 }
 
-export function inject<U = unknown, T extends Atom | InjectionKey<any> | string = string>(
-  key: T
-): T extends Atom ? Ref<AtomType<T>> : U | undefined {
+/** Extend TypeScript overloads of original inject */
+export function inject<T>(key: Atom<T>): Ref<T>
+export function inject<T>(key: InjectionKey<T> | string): T | undefined
+export function inject<T>(key: InjectionKey<T>, defaultValue: T, treatDefaultAsFactory?: false): T
+export function inject<T>(key: string, defaultValue: T, treatDefaultAsFactory?: false): unknown | T
+export function inject<T>(key: InjectionKey<T>, defaultValue: T | (() => T), treatDefaultAsFactory: true): T
+export function inject<T>(key: string, defaultValue: T | (() => T), treatDefaultAsFactory: true): unknown | T
+export function inject<T>(
+  key: Atom<T> | InjectionKey<T> | string,
+  defaultValue?: T | (() => T),
+  treatDefaultAsFactory?: boolean
+) {
   const unique = Symbol.for('unique-injection')
   if (isAtom(key)) {
-    const tryValue: any = originalInject(key, unique)
-    if (tryValue !== undefined && tryValue !== unique) {
-      return ref(tryValue)
+    if (defaultValue !== undefined) {
+      throw new Error('Cannot inject atoms with default values. Atoms already have default values.')
+    }
+    if (hasInjectionContext()) {
+      const tryValue: any = originalInject(key, unique)
+      if (tryValue !== undefined && tryValue !== unique) {
+        return ref(tryValue)
+      }
     }
     return store.get(key)
   } else {
-    return originalInject(key)
+    // @ts-expect-error - The types are right, but TS doesn't like it
+    return originalInject(key, defaultValue, treatDefaultAsFactory)
   }
 }
 
@@ -91,10 +107,12 @@ export function provide<T, K extends Atom | InjectionKey<any> | string = string>
 }
 
 /** Type-restricted functions */
-export const injectAtom = <T extends Atom>(atm: T) => inject(atm)
-export const provideAtom = <T extends Atom>(
-  atm: T,
-  value: AtomType<T>
+export const injectAtom = <T>(atm: Atom<T>) => inject(atm)
+export const provideAtom = <T>(
+  atm: Atom<T>,
+  value: T
 ) => {
   provide(atm, value)
 }
+
+export { injectAtom as useAtom }
