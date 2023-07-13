@@ -110,7 +110,7 @@ export function provide<T, K extends Atom | InjectionKey<any> | string = string>
 export const injectAtom = <T>(atm: Atom<T>) => inject(atm)
 export const provideAtom = <T>(
   atm: Atom<T>,
-  value: T
+  value: T | Ref<T>
 ) => {
   provide(atm, value)
 }
