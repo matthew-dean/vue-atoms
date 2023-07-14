@@ -78,9 +78,10 @@ Inspired by [React Context](https://react.dev/learn/passing-data-deeply-with-con
 
 First, you create an atom:
 ```ts
+import { ref } from 'vue'
 import { atom } from 'vue-atoms'
 
-export const counterAtom = atom(0)
+export const counterAtom = atom(ref(0))
 ```
 In your Vue component, you inject the value like you normally would. However, the atom does not need an explicit provider, and if one isn't found, will use the default value.
 ```vue
@@ -100,11 +101,12 @@ const counter = inject(counterAtom)
 If you wish to provide a new value for part of the component tree, you can do so like the following:
 ```vue
 <script setup lang="ts">
+import { ref } from 'vue'
 import { provide } from 'vue-atoms'
 import { counterAtom } from './atoms'
 
 // The value for `provide` is type-checked to be of the same type as your atom.
-provide(counterAtom, 100)
+provide(counterAtom, ref(100))
 </script>
 
 <template>
@@ -132,7 +134,7 @@ This will now work:
 mount(MyComponent, {
   global: {
     provide: {
-      [counterAtom]: 10
+      [counterAtom]: ref(10)
     }
   }
 })

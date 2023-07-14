@@ -1,8 +1,5 @@
 import {
-  type Ref,
-  type UnwrapRef,
   type InjectionKey,
-  ref,
   provide as originalProvide,
   inject as originalInject,
   hasInjectionContext
@@ -50,12 +47,12 @@ class Store<T = any> {
 const store = new Store()
 
 interface AtomTrait { __type: 'atom' }
-type Atom<T = any> = symbol & AtomTrait & InjectionKey<Ref<UnwrapRef<T>>>
+type Atom<T = any> = symbol & AtomTrait & InjectionKey<T>
 type AtomType<T> = T extends Atom<infer V> ? V : never
 
 export const atom = <T>(initialValue: T) => {
   const sym = Symbol('atom')
-  store.set(sym, ref(initialValue))
+  store.set(sym, initialValue)
   return sym as Atom<T>
 }
 
@@ -64,7 +61,7 @@ const isAtom = <T>(key: Atom<T> | InjectionKey<T> | string): key is Atom<T> => {
 }
 
 /** Extend TypeScript overloads of original inject */
-export function inject<T>(key: Atom<T>): Ref<T>
+export function inject<T>(key: Atom<T>): T
 export function inject<T>(key: InjectionKey<T> | string): T | undefined
 export function inject<T>(key: InjectionKey<T>, defaultValue: T, treatDefaultAsFactory?: false): T
 export function inject<T>(key: string, defaultValue: T, treatDefaultAsFactory?: false): unknown | T
@@ -83,7 +80,7 @@ export function inject<T>(
     if (hasInjectionContext()) {
       const tryValue: any = originalInject(key, unique)
       if (tryValue !== undefined && tryValue !== unique) {
-        return ref(tryValue)
+        return tryValue
       }
     }
     return store.get(key)
@@ -95,7 +92,7 @@ export function inject<T>(
 
 export function provide<T, K extends Atom | InjectionKey<any> | string = string>(
   key: K,
-  value: K extends Atom ? AtomType<K> | Ref<AtomType<K>> : T
+  value: K extends Atom ? AtomType<K> : T
 ): void {
   if (isAtom(key)) {
     /** Create a new atom with the same type */
@@ -110,7 +107,7 @@ export function provide<T, K extends Atom | InjectionKey<any> | string = string>
 export const injectAtom = <T>(atm: Atom<T>) => inject(atm)
 export const provideAtom = <T>(
   atm: Atom<T>,
-  value: T | Ref<T>
+  value: T
 ) => {
   provide(atm, value)
 }

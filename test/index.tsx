@@ -4,7 +4,7 @@ import { mount } from '@vue/test-utils'
 
 describe('Tests', () => {
   describe('Atom tests', () => {
-    const myAtom = atom(0)
+    const myAtom = atom(ref(0))
     it('injects a default value into a component', () => {
       const component = defineComponent(
         () => {
@@ -45,7 +45,7 @@ describe('Tests', () => {
       const wrapper = mount(component, {
         global: {
           provide: {
-            [myAtom]: 1
+            [myAtom]: ref(1)
           }
         }
       })
