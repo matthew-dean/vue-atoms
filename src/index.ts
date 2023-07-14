@@ -50,6 +50,11 @@ interface AtomTrait { __type: 'atom' }
 type Atom<T = any> = symbol & AtomTrait & InjectionKey<T>
 type AtomType<T> = T extends Atom<infer V> ? V : never
 
+/**
+ * @todo Look at something like https://vueuse.org/shared/createInjectionState/
+ * to see if there is a use case for supplying a factory function
+ * that returns a custom provider and injector.
+ */
 export const atom = <T>(initialValue: T) => {
   const sym = Symbol('atom')
   store.set(sym, initialValue)
